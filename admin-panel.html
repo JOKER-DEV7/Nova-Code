@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiveM QBCORE Control Panel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+
+    <style>
+        /* --- Global & Font Setup --- */
+        :root {
+            --bg-primary: #0a0a0d;
+            --bg-secondary: #121215;
+            --bg-tertiary: #1b1b1f;
+            --accent-blue: #00e0ff;
+            --accent-purple: #9d2bfe;
+            --text-light: #e0faff;
+            --text-dim: #8b929c;
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Roboto Mono', monospace;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            font-family: var(--font-body);
+            color: var(--text-light);
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: var(--bg-tertiary);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            color: var(--text-light);
+            text-shadow: 0 0 5px var(--accent-blue), 0 0 10px var(--accent-blue);
+        }
+
+        .logout-btn {
+            background: var(--accent-purple);
+            color: var(--text-light);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #7a1fb5;
+            box-shadow: 0 0 10px rgba(157, 43, 254, 0.5);
+        }
+        
+        /* --- Main Content --- */
+        .content {
+            display: block; /* The panel is now always open */
+        }
+        
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            padding-bottom: 10px;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            color: var(--text-light);
+            text-shadow: 0 0 5px var(--accent-blue);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        /* --- Store Info Form --- */
+        .store-form-container {
+            background-color: var(--bg-secondary);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid var(--bg-tertiary);
+            box-shadow: 0 0 15px rgba(0, 224, 255, 0.1);
+        }
+
+        .store-form-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            color: var(--text-dim);
+        }
+
+        .store-form-container input, .store-form-container textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--bg-tertiary);
+            background-color: var(--bg-primary);
+            color: var(--text-light);
+            font-family: var(--font-body);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .store-form-container input:focus, .store-form-container textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+        
+        .store-form-container button {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            color: var(--text-light);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .store-form-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 224, 255, 0.4);
+        }
+
+        /* --- Products Table & Form --- */
+        .products-table-container {
+            overflow-x: auto;
+            margin-top: 40px;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .products-table th, .products-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+        
+        .products-table th {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--accent-blue);
+        }
+
+        .products-table td {
+            color: var(--text-dim);
+        }
+
+        .products-table tr:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .products-table td:last-child {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .edit-btn { color: #f1c40f; }
+        .edit-btn:hover { color: #f39c12; }
+
+        .delete-btn { color: #e74c3c; }
+        .delete-btn:hover { color: #c0392b; }
+
+        .add-product-btn {
+            background: linear-gradient(90deg, var(--accent-blue), #2ecc71);
+            color: var(--text-light);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 20px;
+        }
+        .add-product-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        /* --- Modal for Forms --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            margin: 5% auto;
+            padding: 30px;
+            border: 2px solid var(--accent-blue);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 224, 255, 0.3);
+        }
+
+        .modal-content h2 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            color: var(--text-light);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-bottom: 20px;
+        }
+        
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            color: var(--text-dim);
+        }
+        
+        .modal-content input, .modal-content textarea, .modal-content select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--bg-tertiary);
+            background-color: var(--bg-primary);
+            color: var(--text-light);
+            font-family: var(--font-body);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .modal-content input:focus, .modal-content textarea:focus, .modal-content select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .modal-buttons button {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .save-btn {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+        }
+
+        .cancel-btn {
+            background-color: var(--bg-tertiary);
+            color: var(--text-dim);
+            border: 1px solid var(--bg-secondary);
+        }
+
+        .close-btn {
+            color: var(--text-dim);
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-btn:hover {
+            color: var(--accent-blue);
+        }
+
+        /* --- Custom Message Box --- */
+        .message-box {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #1abc9c, #16a085);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1002;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            text-align: center;
+            font-family: var(--font-body);
+        }
+        
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+            .section-title { font-size: 2rem; }
+            .modal-content {
+                width: 95%;
+            }
+            .products-table th, .products-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">FiveM QBCORE</div>
+            <button id="logout-btn" class="logout-btn">Logout</button>
+        </header>
+        
+        <div id="admin-content" class="content">
+            
+            <h2 class="section-title">Store Information</h2>
+            <div class="store-form-container">
+                <form id="store-info-form">
+                    <label for="store-name">Store Name</label>
+                    <input type="text" id="store-name" required>
+                    
+                    <label for="store-description">Store Description</label>
+                    <textarea id="store-description" rows="3" required></textarea>
+                    
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+            
+            <h2 class="section-title">Scripts & Products</h2>
+            <button id="add-product-btn" class="add-product-btn"><i class="fas fa-plus"></i> Add New Product</button>
+            <div class="products-table-container">
+                <table id="products-table" class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn product-close-btn">&times;</span>
+            <h2 id="modal-title">Add New Product</h2>
+            <form id="product-form">
+                <label for="product-name">Product Name</label>
+                <input type="text" id="product-name" required>
+                
+                <label for="product-desc">Description</label>
+                <textarea id="product-desc" rows="3" required></textarea>
+
+                <label for="product-price">Price</label>
+                <input type="number" id="product-price" step="0.01" required>
+                
+                <label for="product-framework">Framework</label>
+                <select id="product-framework" required>
+                    <option value="QBCORE">QBCORE</option>
+                    <option value="ESX">ESX</option>
+                    <option value="Standalone">Standalone</option>
+                </select>
+
+                <label for="product-section">Category</label>
+                <select id="product-section" required>
+                    <option value="FiveM Scripts">FiveM Scripts</option>
+                    <option value="FiveM Maps">FiveM Maps</option>
+                    <option value="Cars">Cars</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <label for="product-image">Image URL</label>
+                <input type="url" id="product-image" placeholder="e.g., https://example.com/image.png" required>
+
+                <label for="product-video">Video URL (Optional)</label>
+                <input type="url" id="product-video" placeholder="e.g., https://www.youtube.com/watch?v=...">
+                
+                <label for="product-download">Download URL (Optional)</label>
+                <input type="url" id="product-download" placeholder="e.g., https://example.com/file.zip">
+
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="message-box" class="message-box"></div>
+    
+    <footer>
+        <p>&copy; 2025 FiveM QBCORE Store. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // IMPORTANT: These variables are provided by the canvas environment. DO NOT change them.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnY8f7Di_smM5cT0sEEzKZcySNBpYTGPw",
+            authDomain: "mohamed-3cbb4.firebaseapp.com",
+            projectId: "mohamed-3cbb4",
+            storageBucket: "mohamed-3cbb4.firebasestorage.app",
+            messagingSenderId: "223925944656",
+            appId: "1:223925944656:web:e9b3b9009389587d34ec55",
+            measurementId: "G-ELQC6CTQ7G"
+        };
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db;
+        let auth;
+        let userId;
+        let productsMap = new Map();
+        let currentEditingProductId = null;
+
+        // UI elements
+        const adminContent = document.getElementById('admin-content');
+        const logoutBtn = document.getElementById('logout-btn');
+        const storeInfoForm = document.getElementById('store-info-form');
+        const storeNameInput = document.getElementById('store-name');
+        const storeDescInput = document.getElementById('store-description');
+        const addProductBtn = document.getElementById('add-product-btn');
+        const productsTableBody = document.getElementById('products-table').querySelector('tbody');
+        const productModal = document.getElementById('product-modal');
+        const productModalTitle = document.getElementById('modal-title');
+        const productForm = document.getElementById('product-form');
+        const productNameInput = document.getElementById('product-name');
+        const productDescInput = document.getElementById('product-desc');
+        const productPriceInput = document.getElementById('product-price');
+        const productFrameworkInput = document.getElementById('product-framework');
+        const productSectionInput = document.getElementById('product-section');
+        const productImageInput = document.getElementById('product-image');
+        const productVideoInput = document.getElementById('product-video');
+        const productDownloadInput = document.getElementById('product-download');
+        const closeProductModalBtn = document.querySelector('.product-close-btn');
+        const cancelModalBtn = document.querySelector('.modal-buttons .cancel-btn');
+        const messageBox = document.getElementById('message-box');
+
+        // Function to display a custom message box instead of alert()
+        function showMessage(message, duration = 3000) {
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, duration);
+        }
+
+        // Initialize Firebase and start listeners
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                // Sign in anonymously to get a user ID
+                await signInAnonymously(auth);
+                
+                userId = auth.currentUser?.uid;
+                
+                // Start listening for real-time updates as soon as Firebase is ready
+                startAdminListeners();
+                
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                showMessage('Failed to initialize Firebase. Check console for details.');
+            }
+        }
+        
+        // Start Firestore listeners for admin content
+        function startAdminListeners() {
+            // Listen for real-time updates to the store config
+            onSnapshot(doc(db, `artifacts/${appId}/public/data/store_data/config`), (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    storeNameInput.value = data.name || '';
+                    storeDescInput.value = data.description || '';
+                } else {
+                    console.log("No store config found.");
+                }
+            }, (error) => {
+                console.error("Error listening to store config:", error);
+            });
+            
+            // Listen for real-time updates to the products collection
+            onSnapshot(collection(db, `artifacts/${appId}/public/data/products`), (snapshot) => {
+                productsMap.clear();
+                snapshot.docs.forEach(doc => productsMap.set(doc.id, doc.data()));
+                renderProductsTable();
+            }, (error) => {
+                console.error("Error listening to products:", error);
+            });
+        }
+        
+        // Render products in the table
+        function renderProductsTable() {
+            productsTableBody.innerHTML = '';
+            productsMap.forEach((product, productId) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>${product.section}</td>
+                    <td>$${(product.price || 0).toFixed(2)}</td>
+                    <td>
+                        <button class="action-btn edit-btn" data-id="${productId}"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete-btn" data-id="${productId}"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                productsTableBody.appendChild(row);
+            });
+            
+            // Add event listeners for edit and delete buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const productId = e.target.closest('button').dataset.id;
+                    editProduct(productId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    deleteProduct(e.target.closest('button').dataset.id);
+                });
+            });
+        }
+        
+        // --- Event Listeners ---
+        
+        // Store Info Form submission
+        storeInfoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = storeNameInput.value.trim();
+            const description = storeDescInput.value.trim();
+            
+            try {
+                const storeConfigDocRef = doc(db, `artifacts/${appId}/public/data/store_data/config`);
+                await updateDoc(storeConfigDocRef, {
+                    name: name,
+                    description: description
+                });
+                showMessage("Store information updated successfully!");
+            } catch (error) {
+                console.error("Error updating store info:", error);
+                showMessage("Failed to update store information.");
+            }
+        });
+        
+        // Add Product button click
+        addProductBtn.addEventListener('click', () => {
+            currentEditingProductId = null;
+            productModalTitle.textContent = "Add New Product";
+            productForm.reset();
+            productModal.style.display = 'block';
+        });
+
+        // Edit Product function
+        function editProduct(productId) {
+            const product = productsMap.get(productId);
+            if (!product) {
+                showMessage("Product not found!", 2000);
+                return;
+            }
+            
+            currentEditingProductId = productId;
+            productModalTitle.textContent = "Edit Product";
+            
+            productNameInput.value = product.name || '';
+            productDescInput.value = product.description || '';
+            productPriceInput.value = product.price || '';
+            productFrameworkInput.value = product.framework || 'QBCORE';
+            productSectionInput.value = product.section || 'FiveM Scripts';
+            productImageInput.value = product.imageUrl || '';
+            productVideoInput.value = product.videoUrl || '';
+            productDownloadInput.value = product.downloadUrl || '';
+            
+            productModal.style.display = 'block';
+        }
+
+        // Delete Product function
+        async function deleteProduct(productId) {
+            try {
+                const docRef = doc(db, `artifacts/${appId}/public/data/products`, productId);
+                await deleteDoc(docRef);
+                showMessage("Product deleted successfully!");
+            } catch (error) {
+                console.error("Error deleting product:", error);
+                showMessage("Failed to delete product.");
+            }
+        }
+
+        // Product Form submission
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const productData = {
+                name: productNameInput.value,
+                description: productDescInput.value,
+                price: parseFloat(productPriceInput.value),
+                framework: productFrameworkInput.value,
+                section: productSectionInput.value,
+                imageUrl: productImageInput.value,
+                videoUrl: productVideoInput.value || null,
+                downloadUrl: productDownloadInput.value || null
+            };
+            
+            try {
+                if (currentEditingProductId) {
+                    // Update existing product
+                    const docRef = doc(db, `artifacts/${appId}/public/data/products`, currentEditingProductId);
+                    await updateDoc(docRef, productData);
+                    showMessage("Product updated successfully!");
+                } else {
+                    // Add new product
+                    const newDocRef = doc(collection(db, `artifacts/${appId}/public/data/products`));
+                    await setDoc(newDocRef, productData);
+                    showMessage("Product added successfully!");
+                }
+                productModal.style.display = 'none';
+            } catch (error) {
+                console.error("Error saving product:", error);
+                showMessage("Failed to save product.");
+            }
+        });
+
+        // Close modal buttons
+        closeProductModalBtn.addEventListener('click', () => {
+            productModal.style.display = 'none';
+        });
+        cancelModalBtn.addEventListener('click', () => {
+            productModal.style.display = 'none';
+        });
+        window.addEventListener('click', (e) => {
+            if (e.target === productModal) {
+                productModal.style.display = 'none';
+            }
+        });
+
+        // Logout button
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                showMessage("You have been logged out.", 3000);
+            } catch (error) {
+                console.error("Error logging out:", error);
+                showMessage("Failed to log out.");
+            }
+        });
+
+        initializeFirebase();
+    </script>
+</body>
+</html>

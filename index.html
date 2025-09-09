@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEV STORE | FiveM Scripts Store</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+
+    <style>
+        /* --- Global & Font Setup --- */
+        :root {
+            --bg-primary: #121215;
+            --bg-secondary: #1b1b1f;
+            --bg-tertiary: #2a2a30;
+            --accent-blue: #0193a7;
+            --accent-purple: #208b05;
+            --text-light: #e0faff;
+            --text-dim: #8b929c;
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Roboto Mono', monospace;
+        }
+
+        body {
+            background-color: #0d1117; /* A dark color to complement the grid */
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            color: #f0f6fc; /* A light text color for contrast */
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            position: relative; /* Required for the pseudo-element */
+        }
+
+        /*
+        * 2. ANIMATED BACKGROUND LAYER
+        * This new rule creates a pseudo-element for the animated grid.
+        * It is positioned behind all other content to prevent interference.
+        */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(0deg, transparent 95%, rgba(0, 224, 255, 0.1) 100%), 
+                            linear-gradient(90deg, transparent 95%, rgba(0, 224, 255, 0.1) 100%);
+            background-size: 20px 20px;
+            opacity: 0.5;
+            animation: gridPulse 6s infinite linear;
+            z-index: -1; /* Add this line to place the pseudo-element in the background */
+        }
+
+        @keyframes gridPulse {
+            0% { background-position: 0 0; }
+            100% { background-position: -200px -200px; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 4. ADDITIONAL STYLES FOR CONTENT */
+        .content-container {
+            /* Apply the fadeIn animation here */
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        /* --- Scrollbar Styling --- */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: var(--accent-purple);
+            border-radius: 4px;
+            border: 2px solid var(--bg-secondary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: var(--bg-secondary);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            color: var(--text-light);
+            text-shadow: 0 0 5px var(--accent-blue), 0 0 10px var(--accent-blue);
+        }
+
+        .cart-icon {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .cart-icon:hover {
+            color: var(--accent-blue);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -9px;
+            right: -7px;
+            background-color: #e91a0391;
+            color: white;
+            font-size: 0.8rem;
+            border-radius: 50%;
+            padding: 1px 5px;
+        }
+        
+        /* --- Hero Section --- */
+        .hero {
+            padding: 80px 20px;
+            text-align: center;
+/* background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+ */            border-bottom: 5px solid var(--bg-tertiary);
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 224, 255, 0.6);
+        }
+        
+        .hero-subtitle {
+            font-family: var(--font-body);
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 30px;
+        }
+        
+        /* --- Product Sectioning --- */
+        .product-section {
+            padding: 50px 0;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            color: var(--text-light);
+            text-shadow: 0 0 5px var(--accent-blue);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        /* --- Product Grid --- */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .product-card {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--bg-tertiary);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative; /* Added for the tag */
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 224, 255, 0.3);
+        }
+
+        .product-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 8px;
+            z-index: 10;
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 200px;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+
+        .ad-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .ad-image.active {
+            opacity: 1;
+        }
+
+        /* --- Cart Sidebar --- */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px; /* Hidden by default */
+            width: 350px;
+            height: 100%;
+            background-color: var(--bg-secondary);
+            border-left: 2px solid var(--bg-tertiary);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.4);
+            transition: right 0.4s ease-in-out;
+            padding: 20px;
+            z-index: 200;
+            display: flex; /* Make it a flex container */
+            flex-direction: column; /* Stack its children vertically */
+        }
+
+        .cart-sidebar.show {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--bg-tertiary);
+            padding-bottom: 15px;
+        }
+
+        .cart-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+        }
+
+        .close-cart-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-cart-btn:hover {
+            color: var(--accent-blue);
+        }
+
+        .cart-items {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        
+        .cart-items::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .cart-items::-webkit-scrollbar-thumb {
+            background-color: var(--accent-purple);
+            border-radius: 3px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--bg-tertiary);
+        }
+
+        .cart-item .remove-item-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: color 0.3s;
+        }
+
+        .cart-item .remove-item-btn:hover {
+            color: #c0392b;
+        }
+        
+        .cart-item-name {
+            color: var(--text-light);
+            flex-grow: 1;
+        }
+        
+        .cart-item-price {
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .cart-total {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            border-top: 2px solid var(--bg-tertiary);
+            padding-top: 15px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            color: var(--text-light);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 224, 255, 0.4);
+        }
+        
+        .download-btn {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        /* --- Product Modal (New Design) --- */
+        .product-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            margin: 5% auto;
+            padding: 30px;
+            border: 2px solid var(--accent-blue);
+            width: 90%;
+            max-width: 800px;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 224, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .modal-content {
+                flex-direction: row;
+            }
+        }
+        
+        .close-btn {
+            color: var(--text-dim);
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-btn:hover {
+            color: var(--accent-blue);
+        }
+
+        .product-media {
+            flex: 1;
+            min-width: 300px;
+            height: 300px;
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-media iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .product-info-modal {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .product-info-modal .product-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: var(--text-light);
+            text-shadow: 0 0 5px var(--accent-blue);
+        }
+
+        .product-info-modal .product-desc {
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .product-info-modal .product-price {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            color: var(--accent-purple);
+            font-weight: bold;
+            margin-top: auto; /* Push to the bottom */
+        }
+        
+        .product-info-modal .product-price.free {
+            color: #2ecc71; /* Green color for 'Free' text */
+        }
+
+
+        .buy-now-btn {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .buy-now-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        /* --- Custom Message Box --- */
+        .message-box {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #1abc9c, #16a085);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1002;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            text-align: center;
+            font-family: var(--font-body);
+        }
+
+        /* --- Discord Modal --- */
+        .discord-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            padding-top: 60px;
+        }
+
+        .discord-content {
+            background-color: var(--bg-secondary);
+            margin: 5% auto;
+            padding: 30px;
+            border: 2px solid var(--accent-blue);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 224, 255, 0.3);
+        }
+
+        .discord-content h2 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            color: var(--text-light);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .discord-content label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dim);
+        }
+
+        .discord-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--bg-tertiary);
+            background-color: var(--bg-primary);
+            color: var(--text-light);
+            font-family: var(--font-body);
+            box-sizing: border-box;
+        }
+
+        .discord-content button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            color: var(--text-light);
+        }
+        
+        .discord-content button:hover {
+            background: linear-gradient(90deg, #1f6470, #7337a3);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--bg-secondary);
+            padding: 30px;
+            text-align: center;
+            border-top: 2px solid var(--bg-tertiary);
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000; /* This ensures the footer is on top of other elements */
+        }
+
+        /* --- Social Icons in Footer --- */
+        .footer-socials {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .social-icon {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: var(--accent-blue);
+            transform: translateY(-3px);
+        }
+
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            color: var(--text-light);
+        }
+
+        .footer-copyright {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+
+        /* --- Responsive Adjustments --- */
+        @media (min-width: 768px) {
+            .modal-content {
+                flex-direction: row;
+            }
+        }
+
+       
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">DEV STORE </div>
+            <div class="cart-icon" id="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count" class="cart-count">0</span>
+            </div>
+        </header>
+
+        <div class="hero">
+            <h1 id="store-title" class="hero-title">FiveM QBCore Scripts Store</h1>
+            <p id="store-description" class="hero-subtitle">The best FiveM scripts for your server, powered by the QBCore framework.</p>
+        </div>
+
+
+        <div id="product-sections-container"></div>
+    </div>
+    
+<div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-header">
+        <h2 class="cart-title">Your Cart</h2>
+        <button class="close-cart-btn">&times;</button>
+    </div>
+    <ul id="cart-items" class="cart-items"></ul>
+    <div class="cart-total">
+        <span>Total:</span>
+        <span id="cart-total-price">$0.00</span>
+    </div>
+    <button class="checkout-btn" id="checkout-btn">Checkout</button>
+</div>
+
+
+    <div id="product-modal" class="product-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            </div>
+    </div>
+    
+    <div id="discord-modal" class="discord-modal">
+        <div class="discord-content">
+            <span class="close-btn discord-close-btn">&times;</span>
+            <h2>Enter Discord Username</h2>
+            <form id="discord-form">
+                <label for="discord-username">Username:</label>
+                <input type="text" id="discord-username" name="discord-username" required>
+                <button type="submit">Send Order</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="message-box" class="message-box"></div>
+    
+    <footer>
+        <div class="footer-socials">
+            <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+        </div>
+        <div class="footer-logo">DEV STORE </div>
+        <div class="footer-copyright">&copy; 2024 DEV STORE . All rights reserved.</div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, collection, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // IMPORTANT: These variables are provided by the canvas environment. DO NOT change them.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnY8f7Di_smM5cT0sEEzKZcySNBpYTGPw",
+            authDomain: "mohamed-3cbb4.firebaseapp.com",
+            projectId: "mohamed-3cbb4",
+            storageBucket: "mohamed-3cbb4.firebasestorage.app",
+            messagingSenderId: "223925944656",
+            appId: "1:223925944656:web:e9b3b9009389587d34ec55",
+            measurementId: "G-ELQC6CTQ7G"
+        };
+        const discordWebhookUrl = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+
+        let db;
+        let auth;
+        let cart = [];
+        let productsData = [];
+        let adsData = [];
+        let currentAdIndex = 0;
+        let adInterval;
+
+        // UI elements
+        const storeTitleElement = document.getElementById('store-title');
+        const storeDescElement = document.getElementById('store-description');
+        const productSectionsContainer = document.getElementById('product-sections-container');
+        const productModal = document.getElementById('product-modal');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartIconBtn = document.getElementById('cart-icon');
+        const closeCartBtn = document.querySelector('.close-cart-btn');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalElement = document.getElementById('cart-total-price');
+        const cartCountElement = document.getElementById('cart-count');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const discordModal = document.getElementById('discord-modal');
+        const discordForm = document.getElementById('discord-form');
+        const discordCloseBtn = document.querySelector('.discord-close-btn');
+        const messageBox = document.getElementById('message-box');
+
+        // Function to display a custom message box instead of alert()
+        function showMessage(message, duration = 3000) {
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, duration);
+        }
+
+        // Initialize Firebase and start listeners
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                await signInAnonymously(auth);
+                
+                startPublicListeners();
+                
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                showMessage('Failed to initialize Firebase. Check console for details.');
+            }
+        }
+        
+        // Start Firestore listeners for public-facing data
+        function startPublicListeners() {
+            // Listen for real-time updates to the store config
+            onSnapshot(doc(db, `artifacts/${appId}/public/data/store_data/config`), (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    storeTitleElement.textContent = data.name || 'FiveM QBCore Scripts Store';
+                    storeDescElement.textContent = data.description || 'The best FiveM scripts for your server, powered by the QBCore framework.';
+                } else {
+                    console.log("No store config found.");
+                }
+            }, (error) => {
+                console.error("Error listening to store config:", error);
+            });
+            
+            // Listen for real-time updates to the products collection
+            onSnapshot(collection(db, `artifacts/${appId}/public/data/products`), (snapshot) => {
+                productsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProducts();
+            }, (error) => {
+                console.error("Error listening to products:", error);
+            });
+
+            // Listen for real-time updates to the ads collection
+            onSnapshot(collection(db, `artifacts/${appId}/public/data/ads`), (snapshot) => {
+                adsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAdsCarousel();
+            }, (error) => {
+                console.error("Error listening to ads:", error);
+            });
+        }
+        
+        // Render products on the page, grouped by section
+        function renderProducts() {
+            productSectionsContainer.innerHTML = '';
+            
+            // Group products by their 'section' field
+            const sections = productsData.reduce((acc, product) => {
+                const sectionName = product.section || 'Uncategorized';
+                if (!acc[sectionName]) {
+                    acc[sectionName] = [];
+                }
+                acc[sectionName].push(product);
+                return acc;
+            }, {});
+
+            for (const sectionName in sections) {
+                const section = document.createElement('section');
+                section.className = 'product-section';
+                section.innerHTML = `<h2 class="section-title">${sectionName}</h2>`;
+                
+                const grid = document.createElement('div');
+                grid.className = 'product-grid';
+                
+                sections[sectionName].forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
+                    productCard.dataset.id = product.id;
+                    
+                    const priceText = (product.price === 0) ? 'Free' : `$${product.price.toFixed(2)}`;
+                    
+                    productCard.innerHTML = `
+                        <span class="product-tag">${product.framework || 'Standalone'}</span>
+                        <div class="product-image-container">
+                            <img src="${product.imageUrl || 'https://placehold.co/300x200/2c2c34/b0b0b0?text=Image+Unavailable'}" 
+                                 alt="${product.name}" 
+                                 class="product-image"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/300x200/2c2c34/b0b0b0?text=Image+Unavailable';">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">${product.name}</h3>
+                            <p class="product-price">${priceText}</p>
+                        </div>
+                    `;
+                    grid.appendChild(productCard);
+                    
+                    // Add click listener to each product card
+                    productCard.addEventListener('click', () => showProductDetails(product));
+                });
+                
+                section.appendChild(grid);
+                productSectionsContainer.appendChild(section);
+            }
+        }
+
+        // Render ads carousel
+        function renderAdsCarousel() {
+            if (adsData.length === 0) {
+                adCarouselContainer.style.display = 'none';
+                return;
+            }
+
+            adCarouselContainer.style.display = 'block';
+            adCarouselContainer.innerHTML = '';
+            
+            // Create image elements for each ad
+            adsData.forEach((ad, index) => {
+                const img = document.createElement('img');
+                img.src = ad.imageUrl;
+                img.alt = `Ad for ${productsData.find(p => p.id === ad.linkedProductId)?.name || 'Product'}`;
+                img.className = 'ad-image';
+                if (index === 0) {
+                    img.classList.add('active');
+                }
+                
+                // Add click listener to each ad
+                img.addEventListener('click', () => {
+                    const product = productsData.find(p => p.id === ad.linkedProductId);
+                    if (product) {
+                        showProductDetails(product);
+                    } else {
+                        showMessage("This ad is not linked to an existing product.", 3000);
+                    }
+                });
+
+                adCarouselContainer.appendChild(img);
+            });
+
+            // Start the automatic rotation
+            if (adInterval) clearInterval(adInterval);
+            adInterval = setInterval(nextAd, 5000);
+        }
+
+        function nextAd() {
+            const images = adCarouselContainer.querySelectorAll('.ad-image');
+            if (images.length > 0) {
+                images[currentAdIndex].classList.remove('active');
+                currentAdIndex = (currentAdIndex + 1) % images.length;
+                images[currentAdIndex].classList.add('active');
+            }
+        }
+        
+        // Helper function to convert a standard YouTube URL to an embed URL
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return null;
+            const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?&v=))([^&?\/]+)/);
+            return videoIdMatch ? `https://www.youtube.com/embed/${videoIdMatch[1]}?autoplay=1&mute=1` : null;
+        }
+
+        // Show product details in a modal
+        function showProductDetails(product) {
+            const modalContent = productModal.querySelector('.modal-content');
+            modalContent.innerHTML = '';
+            modalContent.innerHTML = `<span class="close-btn">&times;</span>`;
+
+            const mediaContainer = document.createElement('div');
+            mediaContainer.className = 'product-media';
+
+            const infoContainer = document.createElement('div');
+            infoContainer.className = 'product-info-modal';
+
+            const modalTitle = document.createElement('h2');
+            modalTitle.id = 'modal-product-name';
+            modalTitle.className = 'product-title';
+            modalTitle.textContent = product.name;
+
+            const modalDesc = document.createElement('p');
+            modalDesc.id = 'modal-product-description';
+            modalDesc.className = 'product-desc';
+            modalDesc.textContent = product.description;
+
+            const modalPrice = document.createElement('p');
+            modalPrice.id = 'modal-product-price';
+            modalPrice.className = 'product-price';
+            
+            const actionBtn = document.createElement('button');
+
+            // Check if price is 0 and a download URL exists
+            if (product.price === 0 && product.downloadUrl) {
+                modalPrice.textContent = `Free`;
+                modalPrice.classList.add('free');
+                actionBtn.className = 'download-btn';
+            } else {
+                modalPrice.textContent = `$${product.price.toFixed(2)}`;
+                actionBtn.className = 'buy-now-btn';
+            }
+            actionBtn.textContent = (product.price === 0 && product.downloadUrl) ? 'Download' : 'Add to Cart';
+            
+            // Set the correct action based on the button type
+            if (product.price === 0 && product.downloadUrl) {
+                actionBtn.onclick = () => {
+                    window.open(product.downloadUrl, '_blank');
+                    productModal.style.display = 'none';
+                };
+            } else {
+                actionBtn.onclick = () => {
+                    addItemToCart(product.name, product.price);
+                    productModal.style.display = 'none';
+                };
+            }
+            
+            // Check for a video URL
+            const embedUrl = getYouTubeEmbedUrl(product.videoUrl);
+            if (embedUrl) {
+                // Use an iframe for YouTube videos
+                const iframe = document.createElement('iframe');
+                iframe.src = embedUrl;
+                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                iframe.allowFullscreen = true;
+                mediaContainer.appendChild(iframe);
+            } else {
+                // If no video, show the image
+                const img = document.createElement('img');
+                img.src = product.imageUrl;
+                img.alt = product.name;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = 'https://placehold.co/800x450/2c2c34/b0b0b0?text=Image+Unavailable';
+                };
+                mediaContainer.appendChild(img);
+            }
+
+            infoContainer.appendChild(modalTitle);
+            infoContainer.appendChild(modalDesc);
+            infoContainer.appendChild(modalPrice);
+            infoContainer.appendChild(actionBtn);
+
+            modalContent.appendChild(mediaContainer);
+            modalContent.appendChild(infoContainer);
+
+            // Re-add close button listener after content is re-created
+            modalContent.querySelector('.close-btn').addEventListener('click', () => productModal.style.display = 'none');
+
+            productModal.style.display = 'block';
+        }
+
+        // Event listeners for modal and cart
+        window.addEventListener('click', (event) => {
+            if (event.target == productModal) {
+                productModal.style.display = 'none';
+            }
+        });
+
+        // Cart functionality
+        cartIconBtn.addEventListener('click', () => cartSidebar.classList.add('show'));
+        closeCartBtn.addEventListener('click', () => cartSidebar.classList.remove('show'));
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length > 0) {
+                discordModal.style.display = 'block';
+            } else {
+                showMessage("Your cart is empty!", 2000);
+            }
+        });
+        document.querySelector('.discord-close-btn').addEventListener('click', () => discordModal.style.display = 'none');
+        window.addEventListener('click', (event) => {
+            if (event.target == discordModal) {
+                discordModal.style.display = 'none';
+            }
+        });
+
+        // --- Functions ---
+        function addItemToCart(name, price) {
+            // First, check if the item is already in the cart to prevent duplicates
+            const existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                showMessage(`${name} is already in your cart!`, 2000);
+                return; // Stop the function here
+            }
+            
+            // If it's a new item, add it to the cart
+            cart.push({ name, price });
+            updateCartDisplay();
+            showMessage(`${name} added to cart!`);
+        }
+        
+        function removeItemFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCartDisplay();
+            showMessage(`${name} removed from cart.`, 2000);
+        }
+
+        function updateCartDisplay() {
+            // Clear current items
+            cartItemsContainer.innerHTML = '';
+            
+            let total = 0;
+
+            // Add new items
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'cart-item';
+                
+                const itemName = document.createElement('span');
+                itemName.className = 'cart-item-name';
+                itemName.textContent = item.name;
+
+                const itemPrice = document.createElement('span');
+                itemPrice.className = 'cart-item-price';
+                itemPrice.textContent = `$${item.price.toFixed(2)}`;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-item-btn';
+                removeBtn.textContent = '×';
+                removeBtn.onclick = () => removeItemFromCart(item.name);
+                
+                li.appendChild(itemName);
+                li.appendChild(itemPrice);
+                li.appendChild(removeBtn);
+                cartItemsContainer.appendChild(li);
+
+                total += item.price;
+            });
+            
+            // Update total and cart count
+            cartTotalElement.textContent = `$${total.toFixed(2)}`;
+            cartCountElement.textContent = cart.length;
+        }
+
+        discordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('discord-username').value;
+            if (discordWebhookUrl === 'YOUR_DISCORD_WEBHOOK_URL_HERE') {
+                showMessage("Please configure a Discord webhook URL in the code.", 5000);
+                return;
+            }
+
+            const productList = cart.map(item => `- ${item.name} ($${item.price.toFixed(2)})`).join('\n');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+            const payload = {
+                embeds: [{
+                    title: "New Store Order!",
+                    description: "A new order has been placed from the FiveM store.",
+                    color: 3447003, // A nice blue color for Discord embeds
+                    fields: [
+                        { name: "Products", value: productList, inline: false },
+                        { name: "Total Amount", value: `$${total.toFixed(2)}`, inline: true },
+                        { name: "Discord Username", value: username, inline: true }
+                    ],
+                    timestamp: new Date().toISOString(),
+                }]
+            };
+
+            try {
+                const response = await fetch(discordWebhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.ok) {
+                    showMessage("Order sent to Discord successfully!", 3000);
+                    cart.length = 0; // Clear the cart
+                    updateCartDisplay();
+                    discordModal.style.display = 'none';
+                } else {
+                    showMessage(`Failed to send order. Status: ${response.status}`, 5000);
+                    console.error("Discord webhook failed:", await response.text());
+                }
+            } catch (error) {
+                console.error("Error sending order to Discord:", error);
+                showMessage("An error occurred while sending the order.", 5000);
+            }
+        });
+
+        initializeFirebase();
+    </script>
+</body>
+</html>
