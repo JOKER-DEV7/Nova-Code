@@ -34,6 +34,9 @@
             box-sizing: border-box;
             overflow-x: hidden;
             position: relative; /* Required for the pseudo-element */
+             display: flex;
+            flex-direction: column;
+
         }
 
         /*
@@ -91,6 +94,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            flex: 1 0 auto; /* يملأ الفراغ المتاح */
         }
 
         /* --- Header & Navigation --- */
@@ -626,50 +630,59 @@
             background: linear-gradient(90deg, #1f6470, #7337a3);
         }
 
-        /* --- Footer --- */
-        footer {
-            background-color: var(--bg-secondary);
-            padding: 30px;
-            text-align: center;
-            border-top: 2px solid var(--bg-tertiary);
-            margin-top: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 1000; /* This ensures the footer is on top of other elements */
-        }
-
-        /* --- Social Icons in Footer --- */
-        .footer-socials {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .social-icon {
-            font-size: 1.5rem;
-            color: var(--text-dim);
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
-
-        .social-icon:hover {
-            color: var(--accent-blue);
-            transform: translateY(-3px);
+        /* 1) اجعل الصفحة تستخدم كامل الارتفاع وتكون عمودية */
+        html, body {
+        height: 100%;
+        margin: 0;
         }
 
 
-        .footer-logo {
-            font-family: var(--font-display);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            color: var(--text-light);
-        }
 
-        .footer-copyright {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
+footer {
+  position: relative;   
+  margin-top: auto;     
+  width: 100%;
+  background-color: var(--bg-secondary);
+  padding: 30px;
+  text-align: center;
+  border-top: 2px solid var(--bg-tertiary);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* يخلي كل شيء داخل الفوتر بالنص */
+}
+
+.footer-socials {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  justify-content: center; /* يخلي الأيقونات بالنص */
+}
+
+.social-icon {
+  font-size: 1.5rem;
+  color: var(--text-dim);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icon:hover {
+  color: var(--accent-blue);
+  transform: translateY(-3px);
+}
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.footer-copyright {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
 
 
         /* --- Responsive Adjustments --- */
