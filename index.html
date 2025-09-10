@@ -750,10 +750,7 @@ footer {
     <div id="message-box" class="message-box"></div>
     
     <footer>
-        <div class="footer-socials">
-            <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+        <div class="footer-socials" id="footer-socials">
         </div>
         <div class="footer-logo">Nova Code </div>
         <div class="footer-copyright">&copy; 2024 Nova Code . All rights reserved.</div>
@@ -802,6 +799,7 @@ footer {
         const discordForm = document.getElementById('discord-form');
         const discordCloseBtn = document.querySelector('.discord-close-btn');
         const messageBox = document.getElementById('message-box');
+        const footerSocialsContainer = document.getElementById('footer-socials');
 
         // Function to display a custom message box instead of alert()
         function showMessage(message, duration = 3000) {
@@ -838,6 +836,9 @@ footer {
                     headerLogoElement.textContent = data.name || 'Nova Code';
                     storeTitleElement.textContent = data.name || 'FiveM QBCore Scripts Store';
                     storeDescElement.textContent = data.description || 'The best FiveM scripts for your server, powered by the QBCore framework.';
+                    
+                    // Update social media links dynamically
+                    renderSocialLinks(data.socials || []);
                 } else {
                     console.log("No store config found.");
                 }
@@ -859,6 +860,20 @@ footer {
                 renderAdsCarousel();
             }, (error) => {
                 console.error("Error listening to ads:", error);
+            });
+        }
+        
+        // Function to render social media links dynamically
+        function renderSocialLinks(socials) {
+            footerSocialsContainer.innerHTML = '';
+            socials.forEach(social => {
+                const a = document.createElement('a');
+                a.href = social.url;
+                a.className = 'social-icon';
+                a.target = '_blank'; // Open in new tab
+                a.rel = 'noopener noreferrer'; // Security measure
+                a.innerHTML = `<i class="${social.icon}"></i>`;
+                footerSocialsContainer.appendChild(a);
             });
         }
         
