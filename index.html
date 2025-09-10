@@ -699,7 +699,7 @@ footer {
 
     <div class="container">
         <header>
-            <div class="logo">Nova Code </div>
+            <div class="logo" id="header-logo">Nova Code </div>
             <div class="cart-icon" id="cart-icon">
                 <i class="fas fa-shopping-cart"></i>
                 <span id="cart-count" class="cart-count">0</span>
@@ -786,6 +786,7 @@ footer {
         let adInterval;
 
         // UI elements
+        const headerLogoElement = document.getElementById('header-logo');
         const storeTitleElement = document.getElementById('store-title');
         const storeDescElement = document.getElementById('store-description');
         const productSectionsContainer = document.getElementById('product-sections-container');
@@ -834,6 +835,7 @@ footer {
             onSnapshot(doc(db, `artifacts/${appId}/public/data/store_data/config`), (docSnapshot) => {
                 if (docSnapshot.exists()) {
                     const data = docSnapshot.data();
+                    headerLogoElement.textContent = data.name || 'Nova Code';
                     storeTitleElement.textContent = data.name || 'FiveM QBCore Scripts Store';
                     storeDescElement.textContent = data.description || 'The best FiveM scripts for your server, powered by the QBCore framework.';
                 } else {
